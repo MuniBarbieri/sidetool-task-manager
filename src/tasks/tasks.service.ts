@@ -77,4 +77,21 @@ async update(id: string, dto: UpdateTaskDto) {
 
   return data;
   }
+
+  async remove(id: string) {
+    await this.findOne(id);
+
+    const client = this.supabaseService.getClient();
+
+    const { error } = await client
+      .from('tasks')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return { message: `Task ${id} deleted successfully` };
+  }
 }
