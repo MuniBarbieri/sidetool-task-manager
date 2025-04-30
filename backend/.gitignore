@@ -22,3 +22,5 @@ coverage/
 
 # OS-specific
 .DS_Store
+
+*.iml
