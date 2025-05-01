@@ -1,2 +1,12 @@
 <h1 class="text-2xl font-bold text-blue-600 mb-4">Lista de tareas</h1>
 <p>Aquí se mostrarán las tareas cargadas desde el backend.</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+  <div class="space-y-4">
+    <h2 class="text-xl font-bold mb-4">To Do</h2>
+    <app-task-card *ngFor="let task of todoTasks$ | async" [task]="task" />
+  </div>
+  <div class="space-y-4">
+    <h2 class="text-xl font-bold mb-4">Done</h2>
+    <app-task-card *ngFor="let task of doneTasks$ | async" [task]="task" />
+  </div>
+</div>

@@ -5,11 +5,16 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+
+  app.setGlobalPrefix('api');
+
   const port = configService.get<number>('PORT') ?? 3000;
+  const host = configService.get<string>('HOST_URL') ?? 'localhost';
+
   app.enableCors({
     origin: configService.get<number>('FRONTEND_URL'),
   });
 
-  await app.listen(port);
+  await app.listen(port, host);
 }
 bootstrap();
