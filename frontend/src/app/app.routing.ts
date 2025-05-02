@@ -1,7 +1,5 @@
 import { Routes } from '@angular/router';
-import { AuthComponent } from './pages/auth/auth.component';
 import { LayoutComponent } from './components/layout/layout.component';
-import { TaskListComponent } from './pages/task-list/task-list.component';
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },

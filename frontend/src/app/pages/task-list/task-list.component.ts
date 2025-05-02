@@ -14,6 +14,7 @@ export class TaskListComponent implements OnInit {
   todoTasks$!: Observable<Task[]>;
   doneTasks$!: Observable<Task[]>;
   loading$!: Observable<boolean>;
+  selectedTask: Task | null = null;
 
   constructor(
     private taskService: TaskService,
@@ -30,5 +31,15 @@ export class TaskListComponent implements OnInit {
     });
     this.todoTasks$ = this.taskService.getTodoTasks();
     this.doneTasks$ = this.taskService.getDoneTasks();
+  }
+
+  onEditTask(task: Task) {
+    console.log('Editing task:', task);
+    this.selectedTask = task;
+  }
+
+  closeDialog(closeEvent: any) {
+    console.log('Dialog closed:', closeEvent);
+    this.selectedTask = null;
   }
 }

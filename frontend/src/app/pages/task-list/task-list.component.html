@@ -1,22 +1,29 @@
-<div class='flex flex-col h-screen'>
+<div class='flex flex-col h-screen px-20 py-10 bg-neutral-800'>
+
   <div   *ngIf="loading$ | async" class='flex flex-col h-screen'>
-    <div class="relative h-screen z-50 bg-white bg-opacity-70 flex flex-col items-center justify-center pointer-events-none">
-      <div class="flex w-32 h-32 border-8 border-blue-500 border-dashed rounded-full animate-spin"></div>
-      <div class='flex'>Cargando tareas</div>
+    <div class="relative h-screen z-50 bg-neutral-800 bg-opacity-70 flex flex-col items-center justify-center pointer-events-none">
+      <div class="flex w-32 h-32 border-8 border-yellow-500 border-dashed rounded-full animate-spin"></div>
+      <div class='flex text-yellow-200'>Cargando tareas</div>
     </div>
   </div>
-  <div *ngIf="!(loading$ | async)" class='flex flex-col h-screen'>
-    <h1 class="text-2xl font-bold text-blue-600 mb-4">Lista de tareas</h1>
-    <p>Aquí se mostrarán las tareas cargadas desde el backend.</p>
+  <div *ngIf="!(loading$ | async)" class='flex flex-col h-screen bg-neutral-800'>
+    <h1 class="text-2xl font-bold text-yellow-200 mb-4">Lista de tareas</h1>
+    <p class='text-yellow-500'>Aquí se mostrarán las tareas cargadas desde el backend.</p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
       <div class="space-y-4">
-        <h2 class="text-xl font-bold mb-4">To Do</h2>
-        <app-task-card *ngFor="let task of todoTasks$ | async" [task]="task" />
+        <h2 class="text-xl font-bold mb-4 text-yellow-200">To Do</h2>
+        <app-task-card *ngFor="let task of todoTasks$ | async" [task]="task" (edit)='onEditTask($event)' />
       </div>
       <div class="space-y-4">
-        <h2 class="text-xl font-bold mb-4">Done</h2>
+        <h2 class="text-xl font-bold text-yellow-200 mb-4">Done</h2>
         <app-task-card *ngFor="let task of doneTasks$ | async" [task]="task" />
       </div>
     </div>
   </div>
 </div>
+<!-- Diálogo -->
+<app-task-edit-dialog
+  *ngIf="selectedTask"
+  [task]="selectedTask"
+  (closeDialog)="closeDialog($event)"
+></app-task-edit-dialog>

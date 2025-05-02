@@ -23,10 +23,10 @@ export class TaskService {
   }
 
   getTodoTasks(): Observable<Task[]> {
-    return this.tasks$.pipe(map(tasks => tasks.filter(t => t.completed)));
+    return this.tasks$.pipe(map(tasks => tasks.filter(t => !t.completed)));
   }
 
   getDoneTasks(): Observable<Task[]> {
-    return this.tasks$.pipe(map(tasks => tasks.filter(t => !t.completed)));
+    return this.tasks$.pipe(map(tasks => tasks.filter(t => t.completed)));
   }
 }
