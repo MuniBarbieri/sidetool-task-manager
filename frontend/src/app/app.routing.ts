@@ -4,20 +4,22 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { TaskListComponent } from './pages/task-list/task-list.component';
 
 export const appRoutes: Routes = [
-  // 🔁 Redirección desde raíz a /auth
-  // { path: '', redirectTo: 'auth', pathMatch: 'full' },
-  // Ruta sin layout
-  // { path: 'auth', component: AuthComponent },
-
-  // Ruta con layout aplicado
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', redirectTo: 'tasks', pathMatch: 'full' },
-      { path: 'tasks', component: TaskListComponent }
+      {
+        path: 'home',
+        loadChildren: () =>
+          import('./pages/task-list/task-list.module').then(m => m.TaskListModule)
+      },
+      {
+        path: 'tasks/new',
+        loadChildren: () =>
+          import('./pages/task-form/task-form.module').then(m => m.TaskFormModule)
+      }
     ]
-  }
+  },
 ];
-
 

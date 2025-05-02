@@ -8,6 +8,7 @@ import { appRoutes } from './app.routing';
 import { TaskListComponent } from './pages/task-list/task-list.component';
 import { provideHttpClient } from '@angular/common/http';
 import { TaskCardComponent } from './components/task-card/task-card.component';
+import { TaskFormComponent } from './pages/task-form/task-form.component';
 
 
 
@@ -16,12 +17,13 @@ import { TaskCardComponent } from './components/task-card/task-card.component';
     AppComponent,
     LayoutComponent,
     AuthComponent,
-    TaskListComponent,
-    TaskCardComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes)
+  ],
+  exports:[
+    RouterModule
   ],
   providers: [provideHttpClient()],
   bootstrap: [AppComponent]

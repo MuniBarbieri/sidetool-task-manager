@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TaskApiService } from './task-api.service';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { Task } from '../models/task.model';
 
 
@@ -12,8 +12,10 @@ export class TaskService {
 
   constructor(public taskApiService:TaskApiService) {}
 
-  loadTasks(): void {
-    this.taskApiService.fetchTasks().subscribe(tasks => this._tasks$.next(tasks));
+  loadTasks(): Observable<Task[]> {
+   return this.taskApiService.fetchTasks().pipe(
+      tap(tasks => this._tasks$.next(tasks)),
+    );
   }
 
   get tasks$(): Observable<Task[]> {
