@@ -20,14 +20,17 @@
       />
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-      <div class="space-y-4">
-        <h2 class="text-xl font-bold mb-4 text-yellow-200">To Do</h2>
-        <app-task-card *ngFor="let task of (todoTasks$ | async )" [task]="task" (edit)='onEditTask($event)' />
-      </div>
-      <div class="space-y-4">
-        <h2 class="text-xl font-bold text-yellow-200 mb-4">Done</h2>
-        <app-task-card *ngFor="let task of (doneTasks$ | async)" [task]="task" (edit)='onEditTask($event)' />
-      </div>
+      <app-task-section
+        [title]="'To Do'"
+        [tasks$]="todoTasks$"
+        (edit)="onEditTask($event)"
+      ></app-task-section>
+
+      <app-task-section
+        [title]="'Done'"
+        [tasks$]="doneTasks$"
+        (edit)="onEditTask($event)"
+      ></app-task-section>
     </div>
   </div>
 </div>

@@ -1,0 +1,17 @@
+<div class="space-y-4">
+  <h2 class="text-xl font-bold mb-4 text-yellow-200">{{ title }}</h2>
+
+  <ng-container *ngIf="(tasks$ | async) as tasks">
+    <ng-container *ngIf="tasks.length > 0; else noResults">
+      <app-task-card
+        *ngFor="let task of tasks"
+        [task]="task"
+        (edit)="edit.emit(task)"
+      />
+    </ng-container>
+  </ng-container>
+
+  <ng-template #noResults>
+    <p class="text-yellow-400 italic">No se encontraron tareas para tu búsqueda.</p>
+  </ng-template>
+</div>

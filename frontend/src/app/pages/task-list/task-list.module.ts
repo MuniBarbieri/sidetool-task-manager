@@ -17,7 +17,7 @@ import { FilterTasksPipe } from '../../shared/filter-tasks.pipe';
     FormsModule,
     FilterTasksPipe
   ],
-  declarations: [TaskListComponent,TaskCardComponent, TaskEditDialogComponent],
+  declarations: [TaskListComponent, TaskEditDialogComponent],
   exports: []
 })
 export class TaskListModule {}
