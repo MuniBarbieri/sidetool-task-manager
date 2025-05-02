@@ -6,12 +6,16 @@ import { TaskCardComponent } from '../../components/task-card/task-card.componen
 import { CommonModule } from '@angular/common';
 import { TaskEditDialogComponent } from '../../components/task-edit-dialog/task-edit-dialog.component';
 import { SharedModule } from '../../components/shared.module';
+import { FormsModule } from '@angular/forms';
+import { FilterTasksPipe } from '../../shared/filter-tasks.pipe';
 
 @NgModule({
   imports: [
     RouterModule.forChild(taskListRouting),
     CommonModule,
     SharedModule,
+    FormsModule,
+    FilterTasksPipe
   ],
   declarations: [TaskListComponent,TaskCardComponent, TaskEditDialogComponent],
   exports: []

@@ -8,6 +8,7 @@ import { Task } from '../models/task.model';
 })
 export class TaskService {
   private _tasks$ = new BehaviorSubject<Task[]>([]);
+  numberOfTasks:number = 0;
 
   constructor(private taskApiService: TaskApiService) {}
 
@@ -24,9 +25,15 @@ export class TaskService {
   }
 
   loadTasks(): Observable<Task[]> {
-    return this.taskApiService.fetchTasks().pipe(
-      tap(tasks => this.tasks = tasks),
-    );
+    if(this.tasks.length === 0 || this.numberOfTasks !== this.tasks.length) {
+      return this.taskApiService.fetchTasks().pipe(
+        tap(tasks => {
+          this.tasks = tasks;
+          this.numberOfTasks = tasks.length;
+        }),
+      );
+    }
+    return this.tasks$
   }
 
   createTask(task: Task): Observable<Task> {
@@ -35,11 +42,11 @@ export class TaskService {
     );
   }
 
-  updateTask(task: Task): Observable<Task> {
-    return this.taskApiService.updateTask(task).pipe(
+  updateTask(taskParams: Task): Observable<Task> {
+    return this.taskApiService.updateTask(taskParams).pipe(
       tap(updatedTask => {
-        this.tasks = this.tasks.map(t =>
-          t.id === updatedTask.id ? updatedTask : t
+        this.tasks = this.tasks.map(task =>
+          task.id === updatedTask.id ? updatedTask : task
         );
       }),
     );
@@ -48,20 +55,20 @@ export class TaskService {
   deleteTask(taskId: string): Observable<Task> {
     return this.taskApiService.deleteTask(taskId).pipe(
       tap(() => {
-        this.tasks = this.tasks.filter(t => t.id !== taskId);
+        this.tasks = this.tasks.filter(task => task.id !== taskId);
       }),
     );
   }
 
   getTodoTasks(): Observable<Task[]> {
     return this.tasks$.pipe(
-      map(tasks => tasks.filter(t => !t.completed))
+      map(tasks => tasks.filter(task => !task.completed))
     );
   }
 
   getDoneTasks(): Observable<Task[]> {
     return this.tasks$.pipe(
-      map(tasks => tasks.filter(t => t.completed))
+      map(tasks => tasks.filter(task => task.completed))
     );
   }
 }
