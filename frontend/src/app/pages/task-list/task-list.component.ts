@@ -36,7 +36,7 @@ export class TaskListComponent implements OnInit {
 
     const filteredTasks$ = combineLatest([
       this.taskService.tasks$,
-      new FormControl('').valueChanges.pipe(startWith('')) // permite reaccionar a cambios
+      new FormControl('').valueChanges.pipe(startWith(''))
     ]).pipe(
       map(([tasks, term]) =>
         tasks.filter(task =>

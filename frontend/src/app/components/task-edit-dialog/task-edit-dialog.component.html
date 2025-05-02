@@ -8,21 +8,26 @@
       'animate-dialog-enter': !isClosing,
       'animate-dialog-leave': isClosing
     }"
-    class="bg-neutral-900 rounded-xl p-6 shadow-xl w-full max-w-lg relative transform transition-all duration-300 ease-in-out"
+    class="flex flex-col w-full mx-2 sm:max-h-[90%]  sm:max-w-2xl overscroll-y-auto  sm:p-6 bg-transparent rounded-xl p-2  shadow-xl   relative transform transition-all duration-300 ease-in-out"
   >
-    <button
-      class="absolute top-2 right-2 text-gray-500 cursor-pointer hover:text-yellow-300 text-xl font-bold"
-      (click)="close()"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
+    <div class='flex'>
+      <button
+        class="absolute top-2 right-2 text-yellow-300 cursor-pointer hover:text-neutral-900 text-xl font-bold"
+        (click)="close()"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
 
+  <div class='flex w-full'>
     <app-add-task-form
+      class="flex w-full"
       [initialTask]="task"
       [isEditMode]="true"
       (taskUpdated)="onTaskUpdated($event)"
     ></app-add-task-form>
+  </div>
   </div>
 </div>

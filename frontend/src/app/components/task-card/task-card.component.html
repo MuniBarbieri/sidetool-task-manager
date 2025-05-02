@@ -14,8 +14,12 @@
     </svg>
   </div>
 
-  <h3 class="text-lg font-semibold text-yellow-200">{{ task.title }}</h3>
-  <p class="text-yellow-400 text-sm mb-4">{{ task.description }}</p>
+  <h3 class="text-lg font-semibold text-yellow-200 break-words overflow-hidden">{{ task.title }}</h3>
+
+  <div class="mt-4 p-4 rounded-md border border-yellow-700 bg-black bg-opacity-30">
+    <h4 class="text-yellow-400 font-medium mb-2">Descripción:</h4>
+    <p class="text-yellow-400 text-sm mb-4 break-words overflow-hidden">{{ task.description || 'No se ha agregado detalles de la tarea' }}</p>
+    </div>
   <hr class="my-4 border-yellow-800" />
   <p class="text-sm text-yellow-500 mt-3">Created: {{ task.created_at | date:'shortDate' }}</p>
 </div>
