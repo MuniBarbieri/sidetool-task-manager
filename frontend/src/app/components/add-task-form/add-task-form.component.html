@@ -1,36 +1,43 @@
 <div class="min-h-screen bg-transparent flex items-center justify-center px-4">
-  <div class="w-full max-w-2xl bg-white p-8 rounded-xl shadow">
-    <h2 class="text-2xl font-bold text-blue-600 mb-8">Nueva tarea</h2>
+  <div   *ngIf="loading$ | async" class='flex flex-col min-h-screen'>
+    <div class="relative min-h-screen z-50 bg-neutral-800 bg-opacity-70 flex flex-col items-center justify-center pointer-events-none">
+      <div class="flex w-32 h-32 border-8 border-yellow-500 border-dashed rounded-full animate-spin"></div>
+      <div class='flex text-yellow-200'>Cargando tareas</div>
+    </div>
+  </div>
+
+  <div *ngIf="!(loading$ | async)" class="w-full max-w-2xl bg-black p-8 rounded-xl shadow">
+    <h2 class="text-2xl font-bold text-yellow-200 mb-8">Nueva tarea</h2>
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-6">
       <div>
-        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Título</label>
+        <label for="title" class="block text-sm font-medium text-yellow-400 mb-2">Título</label>
         <input
           type="text"
           id="title"
           formControlName="title"
-          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full bg-black text-yellow-200 border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-300"
         />
         <div class="min-h-[1.5rem] mt-1">
-          <div *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched" class="text-red-500 text-sm">
+          <div *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched" class="text-orange-500 text-sm">
             El título es obligatorio.
           </div>
         </div>
       </div>
 
       <div>
-        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+        <label for="description" class="block text-sm font-medium text-yellow-300 mb-2">Descripción</label>
         <textarea
           id="description"
           rows="4"
           formControlName="description"
-          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full bg-black text-yellow-200 border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-300"
         ></textarea>
       </div>
 
       <div class="pt-4">
         <button
           type="submit"
-          class="w-full bg-blue-600 text-white font-medium py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+          class="w-full bg-yellow-300 text-black font-semibold py-3 rounded-lg hover:bg-yellow-500 transition disabled:opacity-50"
           [disabled]="taskForm.invalid"
         >
           Crear tarea
