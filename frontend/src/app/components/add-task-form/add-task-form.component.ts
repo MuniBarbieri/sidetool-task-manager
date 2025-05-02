@@ -67,7 +67,7 @@ export class AddTaskFormComponent implements OnInit {
     this.loadingService.start();
     this.taskService.deleteTask(this.initialTask.id).subscribe({
       next: (task) =>  this.finishWithSuccess(task,'✅ Tarea Eliminada con éxito'),
-      error: (err) => this.finishWithError('Error al eliminar tarea', err)
+      error: (err) => this.finishWithError('❌ Error al eliminar tarea', err)
     });
   }
 
@@ -80,6 +80,7 @@ export class AddTaskFormComponent implements OnInit {
 
   private finishWithError(message: string, error: any): void {
     this.loadingService.stop();
+    this.toastService.show(message)
     console.error(message, error);
   }
 }

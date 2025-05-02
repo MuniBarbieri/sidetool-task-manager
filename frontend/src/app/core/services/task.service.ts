@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TaskApiService } from './task-api.service';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, Observable, tap } from 'rxjs';
 import { Task } from '../models/task.model';
 
 @Injectable({
@@ -8,6 +8,8 @@ import { Task } from '../models/task.model';
 })
 export class TaskService {
   private _tasks$ = new BehaviorSubject<Task[]>([]);
+  private _searchTerm$ = new BehaviorSubject<string>('');
+
   numberOfTasks:number = 0;
 
   constructor(private taskApiService: TaskApiService) {}
@@ -22,6 +24,10 @@ export class TaskService {
 
   set tasks(tasks: Task[]) {
     this._tasks$.next(tasks);
+  }
+
+  setSearchTerm(term: string) {
+    this._searchTerm$.next(term);
   }
 
   loadTasks(): Observable<Task[]> {
@@ -60,15 +66,31 @@ export class TaskService {
     );
   }
 
-  getTodoTasks(): Observable<Task[]> {
-    return this.tasks$.pipe(
-      map(tasks => tasks.filter(task => !task.completed))
+  getFilteredTasks(): Observable<Task[]> {
+    return combineLatest([
+      this.tasks$,
+      this._searchTerm$.asObservable().pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+      )
+    ]).pipe(
+      map(([tasks, term]) =>
+        tasks.filter(task =>
+          task.title.toLowerCase().includes(term.toLowerCase())
+        )
+      )
     );
   }
 
-  getDoneTasks(): Observable<Task[]> {
-    return this.tasks$.pipe(
-      map(tasks => tasks.filter(task => task.completed))
+  getFilteredTodoTasks(): Observable<Task[]> {
+    return this.getFilteredTasks().pipe(
+      map(tasks => tasks.filter(t => !t.completed))
+    );
+  }
+
+  getFilteredDoneTasks(): Observable<Task[]> {
+    return this.getFilteredTasks().pipe(
+      map(tasks => tasks.filter(t => t.completed))
     );
   }
 }

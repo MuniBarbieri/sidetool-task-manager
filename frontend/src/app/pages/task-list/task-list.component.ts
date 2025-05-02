@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../../core/services/task.service';
 import { Task } from '../../core/models/task.model';
-import { combineLatest, map, Observable, startWith } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LoadingService } from '../../core/services/loading.service';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-task-list',
@@ -16,7 +15,7 @@ export class TaskListComponent implements OnInit {
   doneTasks$!: Observable<Task[]>;
   loading$!: Observable<boolean>;
   selectedTask: Task | null = null;
-  searchTask = '';
+  searchValue = '';
 
   constructor(
     private taskService: TaskService,
@@ -31,27 +30,13 @@ export class TaskListComponent implements OnInit {
       next: () => this.loadingService.stop(),
       error: () => this.loadingService.stop(),
     });
-    this.todoTasks$ = this.taskService.getTodoTasks();
-    this.doneTasks$ = this.taskService.getDoneTasks();
 
-    const filteredTasks$ = combineLatest([
-      this.taskService.tasks$,
-      new FormControl('').valueChanges.pipe(startWith(''))
-    ]).pipe(
-      map(([tasks, term]) =>
-        tasks.filter(task =>
-          task.title.toLowerCase().includes(term!.toLowerCase())
-        )
-      )
-    );
+    this.todoTasks$ = this.taskService.getFilteredTodoTasks();
+    this.doneTasks$ = this.taskService.getFilteredDoneTasks();
+  }
 
-    this.todoTasks$ = combineLatest([filteredTasks$, new FormControl('').valueChanges.pipe(startWith(''))]).pipe(
-      map(([tasks]) => tasks.filter(t => !t.completed))
-    );
-
-    this.doneTasks$ = combineLatest([filteredTasks$, new FormControl('').valueChanges.pipe(startWith(''))]).pipe(
-      map(([tasks]) => tasks.filter(t => t.completed))
-    );
+  onSearch(term: any): void {
+    this.taskService.setSearchTerm(term);
   }
 
   onEditTask(task: Task) {
