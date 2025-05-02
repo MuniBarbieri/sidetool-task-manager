@@ -17,7 +17,7 @@ import { ToastComponent } from './components/toast/toast.component';
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
   ],
   exports:[
     RouterModule

@@ -10,17 +10,14 @@ import { Task } from '../../core/models/task.model';
 export class TaskEditDialogComponent {
   @Input() task!: Task;
   @Output() closeDialog = new EventEmitter<void>();
-  @Output() saveTask = new EventEmitter<Task>();
   isClosing = false;
-
 
   close() {
     this.isClosing = true;
     setTimeout(() => this.closeDialog.emit(), 300);
   }
 
-  onSave(updatedTask: Task) {
-    this.saveTask.emit(updatedTask);
+  onTaskUpdated(updatedTask: Task) {
     this.close();
   }
 }

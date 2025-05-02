@@ -39,7 +39,6 @@ export class TaskListComponent implements OnInit {
   }
 
   closeDialog(closeEvent: any) {
-    console.log('Dialog closed:', closeEvent);
     this.selectedTask = null;
   }
 }
