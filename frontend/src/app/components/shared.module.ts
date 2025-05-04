@@ -7,10 +7,11 @@ import { TaskCardComponent } from './task-card/task-card.component';
 import { LucideAngularModule, icons } from 'lucide-angular';
 import { SkeletonTaskCardComponent } from './skeleton-task-card/skeleton-task-card.component';
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
+import { SkeletonTaskFormComponent } from './skeleton-task-form/skeleton-task-form.component';
 
 @NgModule({
-  declarations: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent, SkeletonTaskCardComponent, LoadingBarComponent],
+  declarations: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent, SkeletonTaskCardComponent, LoadingBarComponent, SkeletonTaskFormComponent],
   imports: [CommonModule, ReactiveFormsModule, LucideAngularModule.pick(icons)],
-  exports: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent,LucideAngularModule, SkeletonTaskCardComponent, LoadingBarComponent],
+  exports: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent,LucideAngularModule, SkeletonTaskCardComponent, LoadingBarComponent, SkeletonTaskFormComponent],
 })
 export class SharedModule {}
