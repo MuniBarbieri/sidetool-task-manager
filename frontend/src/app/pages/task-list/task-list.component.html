@@ -1,42 +1,59 @@
-<div class='flex flex-col min-h-screen sm:px-20 py-10 bg-neutral-800'>
-  <div   *ngIf="loading$ | async" class='flex flex-col min-h-screen'>
-    <div class="relative min-h-screen z-50 bg-neutral-800 bg-opacity-70 flex flex-col items-center justify-center pointer-events-none">
-      <div class="flex w-32 h-32 border-8 border-yellow-500 border-dashed rounded-full animate-spin"></div>
-      <div class='flex text-yellow-200'>Cargando tareas</div>
-    </div>
-  </div>
-  <div *ngIf="!(loading$ | async)" class='flex flex-col min-h-screen bg-neutral-800'>
-    <div class='flex p-6'>
-      <h1 class="text-2xl font-bold text-yellow-200 mb-4">Lista de tareas</h1>
-    </div>
-
-    <div class="mb-4 p-6">
-      <input
-        type="text"
-        [(ngModel)]="searchValue"
-        (ngModelChange)="onSearch($event)"
-        placeholder="Buscar tarea por título..."
-        class="w-full md:w-1/2 p-2 rounded bg-neutral-900 border border-yellow-300 text-yellow-100 focus:outline-none focus:ring-1 focus:ring-yellow-300"
-      />
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-      <app-task-section
-        [title]="'To Do'"
-        [tasks$]="todoTasks$"
-        (edit)="onEditTask($event)"
-      ></app-task-section>
-
-      <app-task-section
-        [title]="'Done'"
-        [tasks$]="doneTasks$"
-        (edit)="onEditTask($event)"
-      ></app-task-section>
-    </div>
-  </div>
+<div *ngIf="taskService.hasError$ | async; else normalView" class="flex items-center justify-center h-screen bg-neutral-800">
+  <img src="assets/side_tool_manager_service_out.png" alt="Error del servidor" class="w-96 h-auto" />
 </div>
-<!-- Diálogo -->
-<app-task-edit-dialog
-  *ngIf="selectedTask"
-  [task]="selectedTask"
-  (closeDialog)="closeDialog($event)"
-></app-task-edit-dialog>
+
+<ng-template #normalView>
+  <div class="flex flex-col min-h-screen sm:px-20 py-10 bg-neutral-800">
+
+    <ng-container *ngIf="isReadyToRender$ | async as state">
+      <ng-container *ngIf="state.notLoading; else loading">
+
+        <div class="flex p-6">
+          <h1 class="text-3xl uppercase underline font-bold text-yellow-200 mb-4">Lista de tareas</h1>
+        </div>
+
+        <div class="mb-4 p-6 relative w-full md:w-2/3">
+          <lucide-angular
+            name="search"
+            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-400 pointer-events-none"
+          ></lucide-angular>
+          <input
+            type="text"
+            [(ngModel)]="searchValue"
+            (ngModelChange)="onSearch($event)"
+            placeholder="Buscar tarea por título..."
+            class="w-full md:w-1/2 p-2 pl-10 rounded bg-neutral-900 border border-yellow-300 text-yellow-100 focus:outline-none focus:ring-1 focus:ring-yellow-300"
+          />
+        </div>
+
+        <ng-container *ngIf="state.hasTasks; else noTasksFound">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+            <app-task-section [title]="'To Do'" [imgSrc]="'assets/no_tasks_.png'" [tasks$]="todoTasks$" (edit)="onEditTask($event)"></app-task-section>
+            <app-task-section [title]="'Done'" [imgSrc]="'assets/no_tasks_.png'" [tasks$]="doneTasks$" (edit)="onEditTask($event)"></app-task-section>
+          </div>
+        </ng-container>
+
+      </ng-container>
+    </ng-container>
+
+    <ng-template #loading>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+        <ng-container *ngFor="let i of [].constructor(6)">
+          <app-skeleton-task-card></app-skeleton-task-card>
+        </ng-container>
+      </div>
+    </ng-template>
+
+    <ng-template #noTasksFound>
+      <div class="flex items-center justify-center h-screen bg-neutral-800">
+        <img src="assets/no_tasks_.png" alt="No hay tareas" class="w-96 h-auto" />
+      </div>
+    </ng-template>
+
+    <app-task-edit-dialog
+      *ngIf="selectedTask"
+      [task]="selectedTask"
+      (closeDialog)="closeDialog($event)"
+    ></app-task-edit-dialog>
+  </div>
+</ng-template>

@@ -1,96 +1,148 @@
 import { Injectable } from '@angular/core';
 import { TaskApiService } from './task-api.service';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, map, Observable, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  Observable,
+  of,
+  tap,
+} from 'rxjs';
 import { Task } from '../models/task.model';
+import { LoadingService } from './loading.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
-  private _tasks$ = new BehaviorSubject<Task[]>([]);
-  private _searchTerm$ = new BehaviorSubject<string>('');
+  private readonly _tasks$ = new BehaviorSubject<Task[]>([]);
+  private readonly _searchTerm$ = new BehaviorSubject<string>('');
+  private readonly _isFavoritesPage$ = new BehaviorSubject<boolean>(false);
+  private readonly _hasError$ = new BehaviorSubject<boolean>(false);
+  readonly isReadyToRender$: Observable<{ notLoading: boolean; hasTasks: boolean }>;
+  readonly loading$: Observable<boolean>;
+  readonly tasks$ = this._tasks$.asObservable();
+  readonly searchTerm$ = this._searchTerm$.asObservable().pipe(
+    debounceTime(200),
+    distinctUntilChanged()
+  );
+  readonly hasError$ = this._hasError$.asObservable();
+  private taskCount = 0;
 
-  numberOfTasks:number = 0;
-
-  constructor(private taskApiService: TaskApiService) {}
-
-  get tasks$(): Observable<Task[]> {
-    return this._tasks$.asObservable();
+  constructor(
+    private taskApiService: TaskApiService,
+    private loadingService: LoadingService
+  ) {
+    this.loading$ = this.loadingService.loading$;
+    this.isReadyToRender$ = combineLatest([
+      this.loading$.pipe(map(loading => !loading)),
+      this.hasTasks$
+    ]).pipe(
+      map(([notLoading, hasTasks]) => ({ notLoading, hasTasks }))
+    );
   }
 
-  get tasks(): Task[] {
-    return this._tasks$.value;
+  setFavoritesContext(isFavorites: boolean): void {
+    this._isFavoritesPage$.next(isFavorites);
   }
 
-  set tasks(tasks: Task[]) {
-    this._tasks$.next(tasks);
-  }
-
-  setSearchTerm(term: string) {
+  setSearchTerm(term: string): void {
     this._searchTerm$.next(term);
   }
 
   loadTasks(): Observable<Task[]> {
-    if(this.tasks.length === 0 || this.numberOfTasks !== this.tasks.length) {
+    if (this._tasks$.value.length === 0 || this.taskCount !== this._tasks$.value.length) {
+      this.loadingService.start();
       return this.taskApiService.fetchTasks().pipe(
-        tap(tasks => {
-          this.tasks = tasks;
-          this.numberOfTasks = tasks.length;
+        tap({
+          next: (tasks) => {
+            this._tasks$.next(tasks);
+            this.taskCount = tasks.length;
+            this._hasError$.next(false);
+            this.loadingService.stop();
+          },
+          error: () => {
+            this._hasError$.next(true);
+            this.loadingService.stop();
+          }
         }),
+        catchError(() => {
+          this._hasError$.next(true);
+          return of([]);
+        })
       );
     }
-    return this.tasks$
+    return this.tasks$;
   }
+
 
   createTask(task: Task): Observable<Task> {
     return this.taskApiService.createTask(task).pipe(
-      tap(newTask => this.tasks = [...this.tasks, newTask]),
+      tap(newTask => {
+        this._tasks$.next([...this._tasks$.value, newTask]);
+      })
     );
   }
 
   updateTask(taskParams: Task): Observable<Task> {
     return this.taskApiService.updateTask(taskParams).pipe(
-      tap(updatedTask => {
-        this.tasks = this.tasks.map(task =>
-          task.id === updatedTask.id ? updatedTask : task
+      tap(updated => {
+        const updatedTasks = this._tasks$.value.map(task =>
+          task.id === updated.id ? updated : task
         );
-      }),
+        this._tasks$.next(updatedTasks);
+      })
     );
   }
+
 
   deleteTask(taskId: string): Observable<Task> {
     return this.taskApiService.deleteTask(taskId).pipe(
       tap(() => {
-        this.tasks = this.tasks.filter(task => task.id !== taskId);
-      }),
+        const filtered = this._tasks$.value.filter(task => task.id !== taskId);
+        this._tasks$.next(filtered);
+      })
     );
   }
 
-  getFilteredTasks(): Observable<Task[]> {
-    return combineLatest([
-      this.tasks$,
-      this._searchTerm$.asObservable().pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
+  updateFavoriteStatus(task: Task): Observable<Task> {
+    const updated = { ...task, favorite: !task.favorite };
+    return this.updateTask(updated);
+  }
+
+  readonly filteredTasks$ = combineLatest([this.tasks$, this.searchTerm$]).pipe(
+    map(([tasks, term]) =>
+      tasks.filter(task =>
+        task.title.toLowerCase().includes(term.toLowerCase())
       )
-    ]).pipe(
-      map(([tasks, term]) =>
-        tasks.filter(task =>
-          task.title.toLowerCase().includes(term.toLowerCase())
-        )
-      )
-    );
-  }
+    )
+  );
 
-  getFilteredTodoTasks(): Observable<Task[]> {
-    return this.getFilteredTasks().pipe(
-      map(tasks => tasks.filter(t => !t.completed))
-    );
-  }
+  readonly filteredTodoTasks$ = combineLatest([
+    this.filteredTasks$,
+    this._isFavoritesPage$
+  ]).pipe(
+    map(([tasks, isFav]) =>
+      tasks.filter(t => !t.completed && (!isFav || t.favorite))
+    )
+  );
 
-  getFilteredDoneTasks(): Observable<Task[]> {
-    return this.getFilteredTasks().pipe(
-      map(tasks => tasks.filter(t => t.completed))
-    );
-  }
+  readonly filteredDoneTasks$ = combineLatest([
+    this.filteredTasks$,
+    this._isFavoritesPage$
+  ]).pipe(
+    map(([tasks, isFav]) =>
+      tasks.filter(t => t.completed && (!isFav || t.favorite))
+    )
+  );
+
+  readonly hasTasks$ = combineLatest([
+    this.filteredTodoTasks$,
+    this.filteredDoneTasks$
+  ]).pipe(
+    map(([todo, done]) => todo.length > 0 || done.length > 0)
+  );
 }

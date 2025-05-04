@@ -10,5 +10,6 @@ import { Observable } from 'rxjs';
 export class TaskSectionComponent {
   @Input() title!: string;
   @Input() tasks$!: Observable<Task[]>;
+  @Input() imgSrc!: string;
   @Output() edit = new EventEmitter<Task>();
 }

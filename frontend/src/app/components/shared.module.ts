@@ -4,10 +4,13 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TaskSectionComponent } from './task-section/task-section.component';
 import { TaskCardComponent } from './task-card/task-card.component';
+import { LucideAngularModule, icons } from 'lucide-angular';
+import { SkeletonTaskCardComponent } from './skeleton-task-card/skeleton-task-card.component';
+import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 
 @NgModule({
-  declarations: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent],
-  imports: [CommonModule, ReactiveFormsModule],
-  exports: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent],
+  declarations: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent, SkeletonTaskCardComponent, LoadingBarComponent],
+  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule.pick(icons)],
+  exports: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent,LucideAngularModule, SkeletonTaskCardComponent, LoadingBarComponent],
 })
 export class SharedModule {}

@@ -1,6 +1,5 @@
 <div class="space-y-4">
-  <h2 class="text-xl font-bold mb-4 text-yellow-200">{{ title }}</h2>
-
+  <h2 class="text:xl md:text-3xl uppercase font-bold mb-4 text-yellow-200">{{ title }}</h2>
   <ng-container *ngIf="(tasks$ | async) as tasks">
     <ng-container *ngIf="tasks.length > 0; else noResults">
       <app-task-card
@@ -12,6 +11,8 @@
   </ng-container>
 
   <ng-template #noResults>
-    <p class="text-yellow-400 italic">No se encontraron tareas para tu búsqueda.</p>
+    <div class="flex items-center justify-center bg-neutral-800">
+      <img [src]="imgSrc" alt="Error del servidor" class="w-20 sm:w-46 h-auto" />
+    </div>
   </ng-template>
 </div>

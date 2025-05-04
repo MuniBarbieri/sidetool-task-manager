@@ -7,6 +7,7 @@ import { AuthComponent } from './pages/auth/auth.component';
 import { appRoutes } from './app.routing';
 import { provideHttpClient } from '@angular/common/http';
 import { ToastComponent } from './components/toast/toast.component';
+import { SharedModule } from './components/shared.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { ToastComponent } from './components/toast/toast.component';
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
+    SharedModule,
   ],
   exports:[
     RouterModule

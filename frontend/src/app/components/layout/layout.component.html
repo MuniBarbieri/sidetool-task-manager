@@ -9,10 +9,12 @@
         <path d="M6.03628 11.2339C5.42936 12.2747 4.94474 13.4977 4.63782 14.6631L12.9847 17.9631L4.63782 21.2908C4.79474 21.8724 5.02782 22.5531 5.26089 23.1093C5.49166 23.6631 5.76859 24.24 6.07551 24.757L12.9986 21.9277C13.4024 21.7616 13.7463 21.4823 13.9886 21.1223C14.2309 20.7623 14.3371 20.2731 14.3394 19.8393L14.3601 16.1239C14.3601 15.6854 14.2401 15.1916 13.9955 14.827C13.7509 14.4623 13.4024 14.1785 12.994 14.01L6.03628 11.2339Z" fill="#FACC15"/>
       </svg>
     </div>
-    <a [routerLink]="'/home'" class="text-yellow-200 hover:underline">Tareas</a>
+    <a [routerLink]="'/tasks'" class="text-yellow-200 hover:underline">Tareas</a>
     <a [routerLink]="'tasks/new'" class="text-yellow-200 hover:underline">Agregar tarea</a>
+    <a [routerLink]="'tasks/favorite'" class="text-yellow-200 hover:underline">Favoritas</a>
   </nav>
   <main class='bg-neutral-900'>
+    <app-loading-bar></app-loading-bar>
     <router-outlet></router-outlet>
     <app-toast></app-toast>
   </main>

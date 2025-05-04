@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../../core/services/task.service';
 import { Task } from '../../core/models/task.model';
 import { Observable } from 'rxjs';
-import { LoadingService } from '../../core/services/loading.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-task-list',
@@ -13,37 +13,39 @@ import { LoadingService } from '../../core/services/loading.service';
 export class TaskListComponent implements OnInit {
   todoTasks$!: Observable<Task[]>;
   doneTasks$!: Observable<Task[]>;
-  loading$!: Observable<boolean>;
+  isReadyToRender$!: Observable<{ notLoading: boolean; hasTasks: boolean }>;
   selectedTask: Task | null = null;
   searchValue = '';
 
   constructor(
-    private taskService: TaskService,
-    private loadingService: LoadingService
-  ) {
-    this.loading$ = this.loadingService.loading$;
-  }
+    public taskService: TaskService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.loadingService.start();
-    this.taskService.loadTasks().subscribe({
-      next: () => this.loadingService.stop(),
-      error: () => this.loadingService.stop(),
-    });
+    this.taskService.loadTasks().subscribe();
+    this.detectFavoritesContext();
 
-    this.todoTasks$ = this.taskService.getFilteredTodoTasks();
-    this.doneTasks$ = this.taskService.getFilteredDoneTasks();
+    this.todoTasks$ = this.taskService.filteredTodoTasks$;
+    this.doneTasks$ = this.taskService.filteredDoneTasks$;
+    this.isReadyToRender$ = this.taskService.isReadyToRender$;
   }
 
-  onSearch(term: any): void {
+  private detectFavoritesContext(): void {
+    const isFavoritesPage = this.router.url.includes('favorite');
+    this.taskService.setFavoritesContext(isFavoritesPage);
+  }
+
+  onSearch(term: string): void {
     this.taskService.setSearchTerm(term);
   }
 
-  onEditTask(task: Task) {
+  onEditTask(task: Task): void {
     this.selectedTask = task;
   }
 
-  closeDialog(closeEvent: any) {
+  closeDialog(_: unknown): void {
     this.selectedTask = null;
   }
 }
+

@@ -10,9 +10,12 @@
           formControlName="title"
           class="w-full bg-black text-yellow-200 border border-yellow-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-yellow-300"
         />
-        <div class="min-h-[1.5rem] mt-1">
+        <div class="min-h-[2.5rem] mt-1">
           <div *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched" class="text-orange-500 text-sm">
             El título es obligatorio.
+          </div>
+          <div *ngIf="taskForm.get('title')?.errors?.['minlength']" class="text-orange-500 text-sm">
+            El título debe tener al menos 10 caracteres.
           </div>
         </div>
       </div>

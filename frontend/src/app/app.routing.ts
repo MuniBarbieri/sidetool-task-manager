@@ -2,13 +2,13 @@ import { Routes } from '@angular/router';
 import { LayoutComponent } from './components/layout/layout.component';
 
 export const appRoutes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'tasks', pathMatch: 'full' },
   {
     path: '',
     component: LayoutComponent,
     children: [
       {
-        path: 'home',
+        path: 'tasks',
         loadChildren: () =>
           import('./pages/task-list/task-list.module').then(m => m.TaskListModule)
       },
@@ -16,7 +16,7 @@ export const appRoutes: Routes = [
         path: 'tasks/new',
         loadChildren: () =>
           import('./pages/task-form/task-form.module').then(m => m.TaskFormModule)
-      }
+      },
     ]
   },
 ];

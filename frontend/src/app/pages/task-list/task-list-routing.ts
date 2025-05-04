@@ -7,4 +7,5 @@ export const taskListRouting: Routes = [
     path: '',
     component: TaskListComponent,
   },
+  { path: 'favorite', component: TaskListComponent }
 ];

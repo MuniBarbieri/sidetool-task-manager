@@ -1,17 +1,24 @@
 <div
-  class="relative bg-black rounded-2xl p-6 shadow-md hover:shadow-[0_0_5px_1px_#FACC15] my-2 transition cursor-pointer"
-  (click)="toggleEdit()"
+  class="relative bg-black rounded-2xl p-6 shadow-md hover:shadow-[0_0_5px_1px_#FACC15] my-2 transition"
 >
-  <div *ngIf="task.completed" class="absolute top-3 right-3 bg-yellow-100 rounded-full p-1">
-    <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
-  </div>
 
-  <div class="flex items-center justify-center w-12 h-12 bg-yellow-100 bg-opacity-10 rounded-full mb-4">
-    <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-    </svg>
+  <div class='flex justify-between items-center mb-4'>
+    <div class="flex">
+      <lucide-angular
+        *ngIf="task.completed"
+        name="badge-check"
+        class="fill-green-300 transition duration-150 ease-in-out hover:scale-110 active:scale-95"
+      ></lucide-angular>
+    </div>
+    <div class="flex">
+      <lucide-angular
+        [name]="task.favorite ? 'star' : 'star-off'"
+        (click)="toggleFavorite(task)"
+        [class.fill-yellow-300]="task.favorite"
+        [class.fill-transparent]="!task.favorite"
+        class="text-yellow-300 cursor-pointer fill-yellow-300 transition duration-150 ease-in-out hover:scale-110 active:scale-95"
+      />
+    </div>
   </div>
 
   <h3 class="text-lg font-semibold text-yellow-200 break-words overflow-hidden">{{ task.title }}</h3>
@@ -21,5 +28,21 @@
     <p class="text-yellow-400 text-sm mb-4 break-words overflow-hidden">{{ task.description || 'No se ha agregado detalles de la tarea' }}</p>
     </div>
   <hr class="my-4 border-yellow-800" />
-  <p class="text-sm text-yellow-500 mt-3">Created: {{ task.created_at | date:'shortDate' }}</p>
+  <div class='flex justify-between'>
+    <div class="flex">
+      <p class="text-sm text-yellow-500 mt-3">
+        Creation date:
+        {{ task.created_at | date:'shortDate' }}
+      </p>
+    </div>
+    <div class='flex cursor-pointer'>
+      <lucide-angular
+        *ngIf="true"
+        (click)="toggleEdit()"
+        name="pencil"
+        class="text-yellow-300 cursor-pointer transition duration-150 ease-in-out hover:scale-110 active:scale-95"
+      ></lucide-angular>
+    </div>
+  </div>
 </div>
+

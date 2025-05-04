@@ -32,11 +32,11 @@ export class AddTaskFormComponent implements OnInit {
 
   ngOnInit(): void {
     const { title = '', description = '', completed = false } = this.initialTask || {};
-    this.taskForm = this.fb.group({
-      title: [title, Validators.required],
-      description: [description],
-      completed: [completed]
-    });
+      this.taskForm = this.fb.group({
+        title: [title,[Validators.required, Validators.minLength(10)]],
+        description: [description],
+        completed: [completed]
+      });
   }
 
   onSubmit(): void {
@@ -56,6 +56,7 @@ export class AddTaskFormComponent implements OnInit {
     if (!this.initialTask) return;
     const updatedTask = { ...this.taskForm.value, id: this.initialTask.id };
     this.loadingService.start();
+    this.taskUpdated.emit();
     this.taskService.updateTask(updatedTask).subscribe({
       next: (task:Task) => this.finishWithSuccess(task,'✅ Tarea editada con éxito'),
       error: (err) => this.finishWithError('Error al actualizar tarea', err)
@@ -67,14 +68,13 @@ export class AddTaskFormComponent implements OnInit {
     this.loadingService.start();
     this.taskService.deleteTask(this.initialTask.id).subscribe({
       next: (task) =>  this.finishWithSuccess(task,'✅ Tarea Eliminada con éxito'),
-      error: (err) => this.finishWithError('❌ Error al eliminar tarea', err)
+      error: (err) => this.finishWithError('Error al eliminar tarea', err)
     });
   }
 
   private finishWithSuccess(task: Task,message: string): void {
     this.taskForm.reset();
     this.loadingService.stop();
-    this.taskUpdated.emit(task);
     this.toastService.show(message);
   }
 
