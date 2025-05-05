@@ -17,7 +17,7 @@ export class TaskEditDialogComponent {
     setTimeout(() => this.closeDialog.emit(), 300);
   }
 
-  onTaskUpdated(updatedTask: Task) {
+  onCloseDialogEvent(_: unknown): void {
     this.close();
   }
 }

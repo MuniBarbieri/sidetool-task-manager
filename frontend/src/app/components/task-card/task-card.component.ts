@@ -13,13 +13,12 @@ export class TaskCardComponent {
   @Output() edit = new EventEmitter<Task>();
 
   constructor(private taskService: TaskService) {}
+
   toggleEdit() {
     this.edit.emit(this.task);
   }
 
-
-
   toggleFavorite(task: Task): void {
-    this.taskService.updateFavoriteStatus(task).subscribe();
+    this.taskService.updateFavorite({id:task.id, favorite: !task.favorite}).subscribe();
   }
 }

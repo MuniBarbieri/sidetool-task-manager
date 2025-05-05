@@ -8,10 +8,11 @@ import { LucideAngularModule, icons } from 'lucide-angular';
 import { SkeletonTaskCardComponent } from './skeleton-task-card/skeleton-task-card.component';
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 import { SkeletonTaskFormComponent } from './skeleton-task-form/skeleton-task-form.component';
+import { PriorityBadgeComponent } from './priority-badge/priority-badge.component';
 
 @NgModule({
-  declarations: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent, SkeletonTaskCardComponent, LoadingBarComponent, SkeletonTaskFormComponent],
+  declarations: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent, SkeletonTaskCardComponent, LoadingBarComponent, SkeletonTaskFormComponent, PriorityBadgeComponent],
   imports: [CommonModule, ReactiveFormsModule, LucideAngularModule.pick(icons)],
-  exports: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent,LucideAngularModule, SkeletonTaskCardComponent, LoadingBarComponent, SkeletonTaskFormComponent],
+  exports: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent,LucideAngularModule, SkeletonTaskCardComponent, LoadingBarComponent, SkeletonTaskFormComponent, PriorityBadgeComponent],
 })
 export class SharedModule {}

@@ -13,6 +13,11 @@ import {
 } from 'rxjs';
 import { Task } from '../models/task.model';
 import { LoadingService } from './loading.service';
+import { ToastService } from './toast.service';
+import { UpdateToFavoriteParams } from '../models/request-params/update-to-favorite-params';
+import { CreateTaskParams } from '../models/request-params/create-task-params';
+import { UpdateTaskParams } from '../models/request-params/update-task-params';
+import { TASK_ERROR_MESSAGES, TASK_SUCCESS_MESSAGES } from '../constants/messages';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +39,8 @@ export class TaskService {
 
   constructor(
     private taskApiService: TaskApiService,
-    private loadingService: LoadingService
+    private loadingService: LoadingService,
+    private toastService: ToastService
   ) {
     this.loading$ = this.loadingService.loading$;
     this.isReadyToRender$ = combineLatest([
@@ -54,63 +60,73 @@ export class TaskService {
   }
 
   loadTasks(): Observable<Task[]> {
-    if (this._tasks$.value.length === 0 || this.taskCount !== this._tasks$.value.length) {
-      this.loadingService.start();
-      return this.taskApiService.fetchTasks().pipe(
-        tap({
-          next: (tasks) => {
-            this._tasks$.next(tasks);
-            this.taskCount = tasks.length;
-            this._hasError$.next(false);
-            this.loadingService.stop();
-          },
-          error: () => {
-            this._hasError$.next(true);
-            this.loadingService.stop();
-          }
-        }),
-        catchError(() => {
-          this._hasError$.next(true);
-          return of([]);
-        })
-      );
-    }
-    return this.tasks$;
-  }
+    const shouldFetch = this._tasks$.value.length === 0 || this.taskCount !== this._tasks$.value.length;
 
+    if (!shouldFetch) return this.tasks$;
 
-  createTask(task: Task): Observable<Task> {
-    return this.taskApiService.createTask(task).pipe(
-      tap(newTask => {
-        this._tasks$.next([...this._tasks$.value, newTask]);
+    this.loadingService.start();
+
+    return this.taskApiService.fetchTasks().pipe(
+      tap(tasks => {
+        this._tasks$.next(tasks);
+        this.taskCount = tasks.length;
+        this._hasError$.next(false);
+        this.loadingService.stop();
+      }),
+      catchError(err => {
+        this._hasError$.next(true);
+        this.loadingService.stop();
+        return of([]);
       })
     );
   }
 
-  updateTask(taskParams: Task): Observable<Task> {
-    return this.taskApiService.updateTask(taskParams).pipe(
+  updateFavorite({ id, favorite }: UpdateToFavoriteParams): Observable<Task> {
+    return this.taskApiService.updateTaskFavorite(id, favorite).pipe(
       tap(updated => {
-        const updatedTasks = this._tasks$.value.map(task =>
-          task.id === updated.id ? updated : task
+        const updatedTasks = this._tasks$.value.map(t =>
+          t.id === updated.id ? updated : t
         );
         this._tasks$.next(updatedTasks);
+        this.toastService.show(TASK_SUCCESS_MESSAGES.updateFavoriteSuccess);
+      }),
+      catchError(err => {
+        this.toastService.show(TASK_ERROR_MESSAGES.updateFavoriteError);
+        return of();
       })
     );
   }
 
+  submitTask(isEdit: boolean, task: UpdateTaskParams | CreateTaskParams, id?: string, ): Observable<Task> {
+    this.loadingService.start();
 
-  deleteTask(taskId: string): Observable<Task> {
+    const action$ = isEdit && id
+      ? this.taskApiService.updateTask(id, task)
+      : this.taskApiService.createTask(task);
+
+    return action$.pipe(
+      tap((result: Task) => this.updateTaskStateAndNotify(result, isEdit, id)),
+      catchError(err => this.notifySubmissionFailure(err, isEdit))
+    );
+  }
+
+  deleteTaskWithFeedback(taskId: string): Observable<Task> {
+    this.loadingService.start();
+
     return this.taskApiService.deleteTask(taskId).pipe(
       tap(() => {
         const filtered = this._tasks$.value.filter(task => task.id !== taskId);
         this._tasks$.next(filtered);
+
+        this.toastService.show(TASK_SUCCESS_MESSAGES.deleteSuccess);
+        this.loadingService.stop();
+      }),
+      catchError(err => {
+        this.toastService.show(TASK_ERROR_MESSAGES.deleteError);
+        this.loadingService.stop();
+        return of();
       })
     );
-  }
-
-  updateFavoriteStatus(task: Task): Observable<Task> {
-    const updated = { ...task, favorite: !task.favorite };
-    return this.updateTask(updated);
   }
 
   readonly filteredTasks$ = combineLatest([this.tasks$, this.searchTerm$]).pipe(
@@ -145,4 +161,33 @@ export class TaskService {
   ]).pipe(
     map(([todo, done]) => todo.length > 0 || done.length > 0)
   );
+
+  private updateTaskStateAndNotify(result: Task, isEdit: boolean, id?: string): void {
+    if (isEdit && id) {
+      const updatedTasks = this._tasks$.value.map(t =>
+        t.id === id ? result : t
+      );
+      this._tasks$.next(updatedTasks);
+    } else {
+      this._tasks$.next([...this._tasks$.value, result]);
+    }
+
+    const message = isEdit
+      ? TASK_SUCCESS_MESSAGES.updateSuccess
+      : TASK_SUCCESS_MESSAGES.createSuccess;
+
+    this.toastService.show(message);
+    this.loadingService.stop();
+  }
+
+  private notifySubmissionFailure(error: any, isEdit: boolean): Observable<never> {
+    const message = isEdit
+      ? TASK_ERROR_MESSAGES.updateError
+      : TASK_ERROR_MESSAGES.createError;
+
+    this.toastService.show(message);
+    this.loadingService.stop();
+    console.error(message, error);
+    return of();
+  }
 }
