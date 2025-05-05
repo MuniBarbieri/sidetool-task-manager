@@ -1,7 +1,7 @@
 <div class="flex items-center justify-center w-full  sm:max-h-screen bg-transparent sm:px-4">
   <div class="flex flex-col w-full max-w-2xl bg-black p-6 sm:p-8 rounded-xl shadow">
     <h2 class="font-serif text-2xl font-bold text-yellow-200 mb-8">{{ isEditMode ? 'Editar Tarea' : 'Crear Tarea'}}</h2>
-    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-2 sm:space-y-6">
       <div class='flex flex-col'>
         <label for="title" class="font-serif block text-sm font-medium text-yellow-400 mb-2">Título</label>
         <input
@@ -63,20 +63,20 @@
           </div>
       </div>
 
-      <div class="pt-4">
+      <div class="pt-2 sm:pt-4">
         <button
           type="submit"
-          class="font-serif w-full bg-yellow-300 text-black font-semibold py-3 rounded-lg cursor-pointer hover:bg-yellow-500 transition disabled:opacity-50"
+          class="font-serif w-full bg-yellow-300 text-black text-xs sm:text-lg font-semibold py-3 rounded-lg cursor-pointer hover:bg-yellow-500 transition disabled:opacity-50"
           [disabled]="taskForm.invalid"
         >
           {{ isEditMode ? 'Actualizar tarea' : 'Crear tarea' }}
         </button>
       </div>
     </form>
-    <div *ngIf='isEditMode' class="pt-4">
+    <div *ngIf='isEditMode' class="pt-2 sm:pt-4">
       <button
         type="submit"
-        class="font-serif w-full bg-yellow-300 text-black font-semibold py-3 rounded-lg cursor-pointer hover:bg-yellow-500 transition disabled:opacity-50"
+        class="font-serif w-full bg-yellow-300 text-black text-xs sm:text-lg font-semibold py-3 rounded-lg cursor-pointer hover:bg-yellow-500 transition disabled:opacity-50"
         (click)="deleteTask()"
       >
         Eliminar tarea

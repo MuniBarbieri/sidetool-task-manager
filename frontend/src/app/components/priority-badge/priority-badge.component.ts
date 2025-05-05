@@ -22,7 +22,7 @@ export class PriorityBadgeComponent {
   }
 
   get classes(): string {
-    const base = 'px-3 py-1 rounded-sm border border-yellow-400 text-yellow-300 bg-neutral-900 transition';
+    const base = 'px-3 py-1 rounded-sm border border-yellow-400  text-xs sm:text-sm text-yellow-300 bg-neutral-900 transition';
 
     const hover = this.readonly ? '' : ' cursor-pointer hover:bg-yellow-600 hover:text-yellow-100';
 
