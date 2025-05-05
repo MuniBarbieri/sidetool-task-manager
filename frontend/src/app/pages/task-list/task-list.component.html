@@ -9,7 +9,7 @@
       <ng-container *ngIf="state.notLoading; else loading">
 
         <div class="flex p-6">
-          <h1 class="font-serif text-3xl uppercase underline font-bold text-yellow-200 mb-4">Lista de tareas</h1>
+          <h1 class="font-serif text-2xl sm:text-3xl uppercase underline font-bold text-yellow-200 mb-4">Task List</h1>
         </div>
 
         <div class="mb-4 p-6 relative w-full md:w-2/3">
@@ -21,7 +21,7 @@
             type="text"
             [(ngModel)]="searchValue"
             (ngModelChange)="onSearch($event)"
-            placeholder="Buscar tarea por título..."
+            placeholder="Search by title..."
             class="font-serif w-full md:w-1/2 p-2 pl-10 rounded bg-neutral-900 border border-yellow-300 text-yellow-100 focus:outline-none focus:ring-1 focus:ring-yellow-300"
           />
         </div>

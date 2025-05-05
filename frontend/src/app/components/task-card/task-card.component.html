@@ -16,16 +16,16 @@
         (click)="toggleFavorite(task)"
         [class.fill-yellow-300]="task.favorite"
         [class.fill-transparent]="!task.favorite"
-        class="text-yellow-300 cursor-pointer fill-yellow-300 transition duration-150 ease-in-out hover:scale-110 active:scale-95"
+        class="text-yellow-300  w-4 h-4 sm:w-6 sm:h-6 cursor-pointer fill-yellow-300 transition duration-150 ease-in-out hover:scale-110 active:scale-95"
       />
     </div>
   </div>
 
-  <h3 class="font-serif text-lg font-semibold text-yellow-200 break-words overflow-hidden">{{ task.title }}</h3>
+  <h3 class="font-serif  text-base sm:text-lg font-semibold text-yellow-200 break-words overflow-hidden">{{ task.title }}</h3>
 
   <div class="mt-4 p-4 rounded-md border border-yellow-700 bg-black bg-opacity-30">
-    <h4 class="font-serif text-yellow-400 font-medium mb-2">Descripción:</h4>
-    <p class="font-serif text-yellow-400 text-sm mb-4 break-words overflow-hidden">{{ task.description || 'No se ha agregado detalles de la tarea' }}</p>
+    <h4 class="font-serif text-yellow-400 text-sm sm:text-base font-medium mb-2">Description:</h4>
+    <p class="font-serif text-yellow-400 text-sm mb-4 break-words overflow-hidden">{{ task.description || 'No task details have been added' }}</p>
     </div>
   <hr class="my-4 border-yellow-800" />
   <div class='flex justify-between items-center'>
@@ -45,7 +45,7 @@
           *ngIf="true"
           (click)="toggleEdit()"
           name="pencil"
-          class="text-yellow-300 cursor-pointer transition duration-150 ease-in-out hover:scale-110 active:scale-95"
+          class="w-4 h-4 sm:w-6 sm:h-6 text-yellow-300 cursor-pointer transition duration-150 ease-in-out hover:scale-110 active:scale-95"
         ></lucide-angular>
       </div>
   </div>

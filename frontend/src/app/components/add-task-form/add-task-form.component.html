@@ -1,9 +1,9 @@
 <div class="flex items-center justify-center w-full  sm:max-h-screen bg-transparent sm:px-4">
   <div class="flex flex-col w-full max-w-2xl bg-black p-6 sm:p-8 rounded-xl shadow">
-    <h2 class="font-serif text-2xl font-bold text-yellow-200 mb-8">{{ isEditMode ? 'Editar Tarea' : 'Crear Tarea'}}</h2>
+    <h2 class="font-serif text-2xl underline font-bold text-yellow-200 mb-6 sm:mb-8">{{ isEditMode ? 'Update Task' : 'Add new Task'}}</h2>
     <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="space-y-2 sm:space-y-6">
       <div class='flex flex-col'>
-        <label for="title" class="font-serif block text-sm font-medium text-yellow-400 mb-2">Título</label>
+        <label for="title" class="font-serif block text-sm sm:text-lg font-medium text-yellow-300 mb-2">Title</label>
         <input
           type="text"
           id="title"
@@ -12,16 +12,16 @@
         />
         <div class="min-h-[2.5rem] mt-1">
           <div *ngIf="taskForm.get('title')?.invalid && taskForm.get('title')?.touched" class="font-serif text-orange-500 text-sm">
-            El título es obligatorio.
+            Title is required.
           </div>
           <div *ngIf="taskForm.get('title')?.errors?.['minlength']" class="font-serif text-orange-500 text-sm">
-            El título debe tener al menos 10 caracteres.
+            The title must be at least 10 characters long.
           </div>
         </div>
       </div>
 
       <div class='flex flex-col'>
-        <label for="description" class="font-serif block text-sm font-medium text-yellow-300 mb-2">Descripción</label>
+        <label for="description" class="font-serif block text-sm sm:text-lg font-medium text-yellow-300 mb-2">Description</label>
         <textarea
           id="description"
           rows="4"
@@ -40,7 +40,7 @@
               [value]="true"
               class="font-serif appearance-none w-4 h-4 border-2 border-yellow-400 rounded-full cursor-pointer checked:bg-yellow-400 checked:border-yellow-200 checked:ring-2 checked:ring-yellow-500"
             />
-            Completada
+            Completed
           </label>
           <label class="inline-flex items-center gap-2">
             <input
@@ -49,7 +49,7 @@
               [value]="false"
               class="font-serif appearance-none w-4 h-4 border-2 border-yellow-400 rounded-full cursor-pointer checked:bg-yellow-400 checked:border-yellow-200 checked:ring-2 checked:ring-yellow-500"
             />
-            Pendiente
+            Pending
           </label>
         </div>
       </div>
@@ -69,7 +69,7 @@
           class="font-serif w-full bg-yellow-300 text-black text-xs sm:text-lg font-semibold py-3 rounded-lg cursor-pointer hover:bg-yellow-500 transition disabled:opacity-50"
           [disabled]="taskForm.invalid"
         >
-          {{ isEditMode ? 'Actualizar tarea' : 'Crear tarea' }}
+          {{ isEditMode ? 'Update Task' : 'Add new task' }}
         </button>
       </div>
     </form>
