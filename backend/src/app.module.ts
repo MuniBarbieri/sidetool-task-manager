@@ -6,9 +6,14 @@ import { AppService } from './app.service';
 import { SupabaseService } from './supabase.service';
 import { SupabaseModule } from './supabase.module';
 import { envValidationSchema } from './config/env.validation';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client', 'browser'),
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: envValidationSchema,
@@ -21,4 +26,3 @@ import { envValidationSchema } from './config/env.validation';
   exports: [SupabaseService],
 })
 export class AppModule {}
-
