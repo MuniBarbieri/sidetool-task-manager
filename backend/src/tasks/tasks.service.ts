@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { SupabaseService } from '../supabase.service';
-import { CreateTaskDto } from './dto/create-task.dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto/update-task.dto';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './models/task.model';
 
 @Injectable()
@@ -62,6 +62,25 @@ export class TasksService {
 
     if (error) throw new Error(error.message);
     if (!data) throw new NotFoundException(`Task with id "${id}" not found`);
+
+    return data;
+  }
+
+  async updateFavorite(id: string, favorite: boolean): Promise<Task> {
+    const client = this.supabaseService.getClient();
+    const { data, error } = await client
+      .from('tasks')
+      .update({ favorite })
+      .eq('id', id)
+      .select()
+      .maybeSingle<Task>();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    if (!data) {
+      throw new NotFoundException(`Task with id "${id}" not found`);
+    }
 
     return data;
   }

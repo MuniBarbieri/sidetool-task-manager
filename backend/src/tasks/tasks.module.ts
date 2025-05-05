@@ -6,6 +6,6 @@ import { SupabaseModule } from '../supabase.module';
 @Module({
   imports: [SupabaseModule],
   controllers: [TasksController],
-  providers: [TasksService]
+  providers: [TasksService],
 })
 export class TasksModule {}
