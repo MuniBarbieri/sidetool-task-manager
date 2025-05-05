@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "build:backend": "npx nest build",
+    "build:backend": "node ./node_modules/@nestjs/cli/bin/nest.js build",
     "build:full": "npm install --prefix ../frontend && npm run --prefix ../frontend build && rm -rf client && cp -r ../frontend/dist/frontend client && npm run build:backend",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
