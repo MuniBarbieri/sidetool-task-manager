@@ -31,7 +31,7 @@
       </div>
 
       <div *ngIf="isEditMode" class="pt-4">
-        <label class="font-serif block text-sm font-medium text-yellow-300 mb-2">Estado</label>
+        <label class="font-serif block text-sm font-medium text-yellow-300 mb-2">Status</label>
         <div class="flex gap-4 text-yellow-200">
           <label class="inline-flex items-center gap-2">
             <input
@@ -69,7 +69,7 @@
           class="font-serif w-full bg-yellow-300 text-black text-xs sm:text-lg font-semibold py-3 rounded-lg cursor-pointer hover:bg-yellow-500 transition disabled:opacity-50"
           [disabled]="taskForm.invalid"
         >
-          {{ isEditMode ? 'Update Task' : 'Add new task' }}
+          {{ isEditMode ? 'Update task' : 'Add new task' }}
         </button>
       </div>
     </form>
@@ -79,7 +79,7 @@
         class="font-serif w-full bg-yellow-300 text-black text-xs sm:text-lg font-semibold py-3 rounded-lg cursor-pointer hover:bg-yellow-500 transition disabled:opacity-50"
         (click)="deleteTask()"
       >
-        Eliminar tarea
+        Delete task
       </button>
     </div>
   </div>
