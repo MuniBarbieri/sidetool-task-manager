@@ -9,12 +9,11 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   const port = configService.get<number>('PORT') ?? 3000;
-  const host = configService.get<string>('HOST_URL') ?? 'localhost';
 
   app.enableCors({
     origin: configService.get<number>('FRONTEND_URL'),
   });
 
-  await app.listen(port, host);
+  await app.listen(port);
 }
 bootstrap();
