@@ -1,11 +1,19 @@
 import { Module } from '@nestjs/common';
-import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
 import { SupabaseModule } from '../supabase.module';
+import { SupabaseTasksRepository } from './repositories/supabase-tasks.repository';
+import { TasksController } from './tasks.controller';
 
 @Module({
-  imports: [SupabaseModule],
+  providers: [
+    TasksService,
+    {
+      provide: 'TasksRepository',
+      useClass: SupabaseTasksRepository,
+    },
+  ],
   controllers: [TasksController],
-  providers: [TasksService],
+  imports: [SupabaseModule],
+  exports: [TasksService],
 })
 export class TasksModule {}
