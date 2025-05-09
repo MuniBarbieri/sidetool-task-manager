@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AddTaskFormComponent } from './add-task-form/add-task-form.component';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TaskSectionComponent } from './task-section/task-section.component';
 import { TaskCardComponent } from './task-card/task-card.component';
 import { LucideAngularModule, icons } from 'lucide-angular';
@@ -13,7 +13,7 @@ import { SkeletonEditDialogComponent } from './skeleton-edit-dialog/skeleton-edi
 
 @NgModule({
   declarations: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent, SkeletonTaskCardComponent, LoadingBarComponent, SkeletonTaskFormComponent, PriorityBadgeComponent, SkeletonEditDialogComponent],
-  imports: [CommonModule, ReactiveFormsModule, LucideAngularModule.pick(icons)],
-  exports: [AddTaskFormComponent, TaskSectionComponent, TaskCardComponent,LucideAngularModule, SkeletonTaskCardComponent, LoadingBarComponent, SkeletonTaskFormComponent, PriorityBadgeComponent, SkeletonEditDialogComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, LucideAngularModule.pick(icons)],
+  exports: [CommonModule, FormsModule, AddTaskFormComponent, TaskSectionComponent, TaskCardComponent,LucideAngularModule, SkeletonTaskCardComponent, LoadingBarComponent, SkeletonTaskFormComponent, PriorityBadgeComponent, SkeletonEditDialogComponent],
 })
 export class SharedModule {}
